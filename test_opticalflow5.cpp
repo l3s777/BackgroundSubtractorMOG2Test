@@ -78,47 +78,6 @@ try {
 		rectangle(frame, cv::Point(5, 5), cv::Point(10,10), cv::Scalar(255,0,255), -1);
 
 
-
-		// ***** TEST
-		// find contours in the mask and initialize the current (x, y) center of the ball
-		std::vector<std::vector<cv::Point> > contours;  // container for the contours
-		std::vector<cv::Vec4i> hierarchy;
-		cv::findContours(aux.clone(), contours,
-                     hierarchy,                     /* find the image contours */
-                     CV_RETR_EXTERNAL,
-                     CV_CHAIN_APPROX_SIMPLE);
-
-    		cv::Point2f center(-1000,-1000);
-
-		if (contours.size() > 0){
-
-			int largest_area=0;
-			int largest_contour_index=0;
-
-			for(int i=0; i < contours.size();i++){
-				// iterate through each contour.
-				double a = cv::contourArea(cv::Mat(contours[i]),false);
-		   		if(a > largest_area) {
-					largest_area=a;
-					largest_contour_index=i;
-		    		}
-			}
-
-			cv::Point2f tempcenter;
-  			float radius;
-			cv::minEnclosingCircle((cv::Mat)contours[largest_contour_index], tempcenter, radius);
-			cv::Moments M = cv::moments((cv::Mat)contours[largest_contour_index]);
-			center = cv::Point2f(int(M.m10 / M.m00), int(M.m01 / M.m00));
-
-			if (radius > 15) {
-				circle(aux, cv::Point(int(tempcenter.x), int(tempcenter.y)), int(radius), cv::Scalar(0, 255, 255), 3);
-				circle(aux, center, 5, cv::Scalar(0, 0, 255), -1);
-		    		//mainCenter = center; 
-			}
-		} 
-
-
-
 		//show the current frame and the fg masks
 		imshow("Frame", frame);
 		imshow("FG Mask MOG 2", fgMaskMOG2);
